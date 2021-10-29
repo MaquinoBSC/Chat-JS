@@ -70,7 +70,7 @@ const contenidoChat= (user)=> {
             }
 
             //Hacer que cada que se envia un mensaje el scroll baje hasta el ultimo mensaje
-            contenidoProtegido.scrollTo= contenidoProtegido.scrollHeight;
+            contenidoProtegido.scrollTop= contenidoProtegido.scrollHeight;
         })
     });
 } 
