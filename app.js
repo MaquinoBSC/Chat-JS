@@ -12,9 +12,6 @@ firebase.auth().onAuthStateChanged((user)=> {
         `;
         cerrarSesion();
         nombreUsuario.innerHTML= user.displayName;
-        contenidoProtegido.innerHTML= /*html*/`
-            <p class="text-center lead mt-5">Bienvenido ${user.email}</p>
-        `;
         formulario.classList= 'input-group py-3 fixed-bottom container';
         contenidoChat(user);
     }
@@ -51,6 +48,30 @@ const contenidoChat= (user)=> {
         .catch(err=> console.log(err));
 
         formulario.reset();
+    });
+
+    firebase.firestore().collection('chat').orderBy('fecha').onSnapshot((snapshot)=> {
+        contenidoProtegido.innerHTML= '';
+        snapshot.forEach((doc)=> {
+
+            if(doc.data().uid == user.uid){
+                contenidoProtegido.innerHTML += /*html*/`
+                    <div class="d-flex justify-content-end">
+                        <span class="badge badge-pill badge-primary">${doc.data().texto}</span>
+                    </div>
+                `;
+            }
+            else{
+                contenidoProtegido.innerHTML += `
+                    <div class="d-flex justify-content-start">
+                        <span class="badge badge-pill badge-secondary"> ${doc.data().texto} </span>
+                    </div>
+                `
+            }
+
+            //Hacer que cada que se envia un mensaje el scroll baje hasta el ultimo mensaje
+            contenidoProtegido.scrollTo= contenidoProtegido.scrollHeight;
+        })
     });
 } 
 
